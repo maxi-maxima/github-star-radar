@@ -18,7 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           persist-credentials: true
+
+      - name: Sync latest branch
+        run: git pull --ff-only origin "${GITHUB_REF_NAME:-main}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,5 +56,6 @@ jobs:
             echo "No report changes to commit"
           else
             git commit -m "chore: daily github star radar report"
+            git pull --rebase origin "${GITHUB_REF_NAME:-main}"
             git push
           fi
