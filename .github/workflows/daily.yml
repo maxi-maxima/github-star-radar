@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-github-star-radar-${{ github.ref_name || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-report:
     runs-on: ubuntu-latest
@@ -20,6 +24,7 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
           persist-credentials: true
+          fetch-depth: 0
 
       - name: Sync latest branch
         run: git pull --ff-only origin "${GITHUB_REF_NAME:-main}"
