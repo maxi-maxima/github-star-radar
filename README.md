@@ -45,6 +45,20 @@ python daily_github_star_radar.py
 
 生成结果会出现在 `reports/` 目录。
 
+## 自检
+
+仓库包含不访问网络的单元测试，覆盖小时窗口计算、GH Archive gzip 解析、Star 去重和 Markdown 渲染：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+想快速验证脚本入口、但不下载完整 GH Archive 数据，可以把统计窗口设为 0：
+
+```bash
+WINDOW_HOURS=0 TOP_N=1 OUTPUT_DIR=/tmp/star-radar-smoke python daily_github_star_radar.py
+```
+
 ## 注意
 
 Star 增长只能代表“被关注得快”，不代表代码质量、安全性或长期维护质量。重要项目建议继续看 README、Issue、Release 和最近提交。

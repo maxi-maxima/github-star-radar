@@ -398,8 +398,9 @@ def main() -> None:
     hours = hour_range(window_end, window_hours)
     report_date = datetime.now(local_tz)
 
+    window_start = hours[0] if hours else window_end
     print(f"[INFO] Report timezone: {tz_name}")
-    print(f"[INFO] Window UTC: {hours[0].isoformat()} - {window_end.isoformat()}")
+    print(f"[INFO] Window UTC: {window_start.isoformat()} - {window_end.isoformat()}")
     print(f"[INFO] TOP_N={top_n}, WINDOW_HOURS={window_hours}, DATA_DELAY_HOURS={data_delay_hours}")
 
     candidates, total_star_events = collect_star_candidates(hours)
@@ -407,7 +408,7 @@ def main() -> None:
     print(f"[INFO] Unique star events in window: {total_star_events:,}")
 
     rows = build_report_rows(candidates, top_n=top_n, skip_forks=skip_forks)
-    markdown = render_markdown(rows, report_date, hours[0], window_end, total_star_events, skip_forks)
+    markdown = render_markdown(rows, report_date, window_start, window_end, total_star_events, skip_forks)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{report_date:%Y-%m-%d}.md"
