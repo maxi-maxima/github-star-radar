@@ -57,6 +57,12 @@ def env_int(name: str, default: int) -> int:
         raise SystemExit(f"环境变量 {name} 必须是整数，当前值：{raw!r}")
 
 
+def require_positive_int(name: str, value: int) -> int:
+    if value <= 0:
+        raise SystemExit(f"环境变量 {name} 必须大于 0，当前值：{value}")
+    return value
+
+
 def truthy_env(name: str, default: bool = False) -> bool:
     raw = os.getenv(name)
     if raw is None:
@@ -384,9 +390,9 @@ def render_markdown(
 
 
 def main() -> None:
-    top_n = env_int("TOP_N", 20)
-    window_hours = env_int("WINDOW_HOURS", 24)
-    data_delay_hours = env_int("DATA_DELAY_HOURS", 2)
+    top_n = require_positive_int("TOP_N", env_int("TOP_N", 20))
+    window_hours = require_positive_int("WINDOW_HOURS", env_int("WINDOW_HOURS", 24))
+    data_delay_hours = require_positive_int("DATA_DELAY_HOURS", env_int("DATA_DELAY_HOURS", 2))
     output_dir = Path(os.getenv("OUTPUT_DIR", "reports"))
     tz_name = os.getenv("TZ_NAME", "America/New_York")
     skip_forks = truthy_env("SKIP_FORKS", True)
